@@ -35,11 +35,16 @@ def operator_list(request):
 @api_view(['GET', 'PUT', 'DELETE'])
 @parser_classes([JSONParser])
 @error_handler_basic
-def operator_detail(request, username: str):
+def operator_detail(request, pk=None, username=None, tg_id=None):
     """
     View(GET), update(PUT) or delete(DELETE) a operator.
     """
-    operator = Operator.objects.get(username=username)
+    if pk:
+        operator = Operator.objects.get(pk=pk)
+    elif username:
+        operator = Operator.objects.get(username=username)
+    elif tg_id:
+        operator = Operator.objects.get(tg_id=tg_id)
     data = request.data
 
     if request.method == 'GET':

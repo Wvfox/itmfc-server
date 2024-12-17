@@ -1,0 +1,17 @@
+meta {
+  name: Update (tg_id)
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{PERSONAL}}/operator/tg-id/597
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "tg"
+  }
+}

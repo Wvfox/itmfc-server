@@ -1,17 +1,17 @@
 meta {
-  name: Update
+  name: Update (pk)
   type: http
-  seq: 3
+  seq: 6
 }
 
 put {
-  url: {{PERSONAL}}/operator/byvshevmm
+  url: {{PERSONAL}}/operator/1
   body: json
   auth: none
 }
 
 body:json {
   {
-    "tg_id": 597
+    "name": "pk"
   }
 }

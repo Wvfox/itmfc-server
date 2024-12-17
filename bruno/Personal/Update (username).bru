@@ -1,0 +1,17 @@
+meta {
+  name: Update (username)
+  type: http
+  seq: 7
+}
+
+put {
+  url: {{PERSONAL}}/operator/username/byvshevmm
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "username"
+  }
+}
