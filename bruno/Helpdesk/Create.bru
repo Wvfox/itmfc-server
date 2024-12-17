@@ -1,0 +1,18 @@
+meta {
+  name: Create
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{HELPDESK}}/application
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "category": "test",
+    "operator_username": "byvshevmm"
+  }
+}
