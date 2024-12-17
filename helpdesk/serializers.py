@@ -8,6 +8,7 @@ class ApplicationSerializer(serializers.ModelSerializer):
     operator = OperatorSerializer(required=False)
     workstation = WorkstationSerializer(required=False)
     executor = OperatorSerializer(required=False)
+    signer = OperatorSerializer(required=False)
 
     class Meta:
         model = Application

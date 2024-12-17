@@ -39,6 +39,13 @@ class Application(models.Model):
         blank=True,
         null=True
     )
+    signer = models.ForeignKey(
+        Operator,
+        related_name='Signer',
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True
+    )
     # cancel | new | waiting | process | complete
     status = models.CharField(
         'Status',

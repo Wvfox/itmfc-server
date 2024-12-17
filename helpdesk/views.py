@@ -72,6 +72,10 @@ def application_detail(request, pk: int):
             serializer.validated_data['executor'] = Operator.objects.get(
                 tg_id=data['executor_id']
             )
+        if data.get('signer_id'):
+            serializer.validated_data['signer'] = Operator.objects.get(
+                tg_id=data['signer_id']
+            )
         serializer.save()
         return JsonResponse(serializer.data, status=201)
 
