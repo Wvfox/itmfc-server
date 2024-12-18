@@ -1,0 +1,18 @@
+meta {
+  name: Remove
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{HELPDESK}}/application/1
+  body: none
+  auth: none
+}
+
+body:json {
+  {
+    "status": "test",
+    "signer_id": 2051812677
+  }
+}
