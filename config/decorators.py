@@ -23,7 +23,9 @@ def error_handler_basic(func):
 def mfc_auth_token(func):
     def wrapper(*args, **kwargs):
         request = args[0]
-        token = decrypt_aes(request.headers['Token'])
+        token = ''
+        if request.headers.get('Token'):
+            token = decrypt_aes(request.headers['Token'])
         if token != os.environ.get("AES_TOKEN"):
             return HttpResponse(status=403)
         return func(*args, **kwargs)
