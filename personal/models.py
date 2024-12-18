@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Operator(models.Model):
-    username = models.SlugField('Username', max_length=64, unique=True)
+    username = models.SlugField('Username', max_length=64, unique=True, blank=True, null=True)
     name = models.CharField('Name', max_length=128)
     tag = models.CharField('Tag', max_length=64, unique=True, blank=True, null=True)
     tg_id = models.BigIntegerField('Tg user id', unique=True, blank=True, null=True)
