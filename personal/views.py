@@ -2,7 +2,7 @@ from django.http import HttpResponse, JsonResponse
 from rest_framework.parsers import JSONParser
 from rest_framework.decorators import api_view, parser_classes
 
-from config.decorators import error_handler_basic
+from config.decorators import error_handler_basic, mfc_auth_token
 from .serializers import *
 
 
@@ -13,6 +13,7 @@ from .serializers import *
 
 @api_view(['GET', 'POST'])
 @parser_classes([JSONParser])
+@mfc_auth_token
 @error_handler_basic
 def operator_list(request):
     """
@@ -34,6 +35,7 @@ def operator_list(request):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 @parser_classes([JSONParser])
+@mfc_auth_token
 @error_handler_basic
 def operator_detail(request, pk=None, username=None, tg_id=None):
     """
@@ -74,6 +76,7 @@ def operator_detail(request, pk=None, username=None, tg_id=None):
 
 @api_view(['GET', 'POST'])
 @parser_classes([JSONParser])
+@mfc_auth_token
 @error_handler_basic
 def printer_list(request):
     """
@@ -95,6 +98,7 @@ def printer_list(request):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 @parser_classes([JSONParser])
+@mfc_auth_token
 @error_handler_basic
 def printer_detail(request, ip: str):
     """
@@ -130,6 +134,7 @@ def printer_detail(request, ip: str):
 
 @api_view(['GET', 'POST'])
 @parser_classes([JSONParser])
+@mfc_auth_token
 @error_handler_basic
 def workstation_list(request):
     """
@@ -157,6 +162,7 @@ def workstation_list(request):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 @parser_classes([JSONParser])
+@mfc_auth_token
 @error_handler_basic
 def workstation_detail(request, name: str):
     """
@@ -184,6 +190,7 @@ def workstation_detail(request, name: str):
 
 @api_view(['PUT', 'DELETE'])
 @parser_classes([JSONParser])
+@mfc_auth_token
 @error_handler_basic
 def workstation_printer(request, name: str, ip: str):
     """

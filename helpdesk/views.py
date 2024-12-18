@@ -2,7 +2,7 @@ from django.http import JsonResponse, HttpResponse
 from rest_framework.parsers import JSONParser
 from rest_framework.decorators import api_view, parser_classes
 
-from config.decorators import error_handler_basic
+from config.decorators import error_handler_basic, mfc_auth_token
 from .serializers import *
 
 
@@ -13,6 +13,7 @@ from .serializers import *
 
 @api_view(['GET', 'POST'])
 @parser_classes([JSONParser])
+@mfc_auth_token
 @error_handler_basic
 def application_list(request):
     """
@@ -42,6 +43,7 @@ def application_list(request):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 @parser_classes([JSONParser])
+@mfc_auth_token
 @error_handler_basic
 def application_detail(request, pk: int):
     """
