@@ -4,7 +4,7 @@ from sqlite3 import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse, HttpResponse
 
-from config.utilities import decrypt_aes
+from config.utilities import decrypt_aes, encrypt_aes
 
 
 def error_handler_basic(func):
