@@ -52,6 +52,11 @@ class Application(models.Model):
         max_length=32,
         default='new'
     )
+    report_id = models.BigIntegerField(
+        'Report message id',
+        blank=True,
+        null=True
+    )
     updated_at = models.DateField('Date of updating', auto_now=True)
     created_at = models.DateField('Date of creation', auto_now_add=True)
 

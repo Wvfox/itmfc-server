@@ -24,8 +24,10 @@ def mfc_auth_token(func):
     def wrapper(*args, **kwargs):
         request = args[0]
         token = ''
-        if request.headers.get('Token'):
+        try:
             token = decrypt_aes(request.headers['Token'])
+        except Exception as ex:
+            print(ex)
         if token != os.environ.get("AES_TOKEN"):
             return JsonResponse({'Message': 'Failed authorization'}, status=403)
         return func(*args, **kwargs)
