@@ -27,6 +27,6 @@ def mfc_auth_token(func):
         if request.headers.get('Token'):
             token = decrypt_aes(request.headers['Token'])
         if token != os.environ.get("AES_TOKEN"):
-            return HttpResponse(status=403)
+            return JsonResponse({'Message': 'Failed authorization'}, status=403)
         return func(*args, **kwargs)
     return wrapper
