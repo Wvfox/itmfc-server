@@ -86,7 +86,7 @@ def decrypt_aes(cipher_str):
     data = base64.b64decode(cipher_str_bytes)
     decrypted_data = decryptor.update(data) + decryptor.finalize()
     unpadded_data = unpadder.update(decrypted_data) + unpadder.finalize()
-    return unpadded_data
+    return unpadded_data.decode("utf-8")
 
 
 '''--------------------------------------------------------------
