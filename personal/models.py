@@ -9,6 +9,7 @@ class Operator(models.Model):
     birthday = models.DateField('Birthday', max_length=32, blank=True, null=True)
     is_head = models.BooleanField('Head', default=False)
     is_admin = models.BooleanField('System administrator', default=False)
+    departament = models.CharField('Departament', max_length=64, blank=True, null=True)
     date_ecp = models.DateField('Date end ECP', max_length=32, blank=True, null=True)
     updated_at = models.DateField('Date of updating', auto_now=True)
     created_at = models.DateField('Date of creation', auto_now_add=True)
