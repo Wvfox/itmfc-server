@@ -1,0 +1,17 @@
+meta {
+  name: Add printer
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{PERSONAL}}/workstation/test-01/printer/1.1.1.1
+  body: none
+  auth: none
+}
+
+body:json {
+  {
+    "name_desktop": "test-01"
+  }
+}
