@@ -16,7 +16,16 @@ class ApplicationSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'updated_at', 'created_at')
 
 
+class ProblemSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Button
+        fields = '__all__'
+        read_only_fields = ('id', 'updated_at', 'created_at')
+
+
 class ButtonSerializer(serializers.ModelSerializer):
+    problems = ProblemSerializer(required=False, many=True)
 
     class Meta:
         model = Button

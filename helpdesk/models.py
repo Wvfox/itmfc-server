@@ -74,6 +74,7 @@ class Button(models.Model):
     size = models.CharField('Size btn', max_length=16, default='small', blank=True, null=True)
     departament = models.CharField('Departament', max_length=32, blank=True, null=True)
     layout = models.CharField('Layout category', max_length=16, blank=True, null=True)
+    problems = models.ManyToManyField('Button', blank=True)
     updated_at = models.DateField('Date of updating', auto_now=True)
     created_at = models.DateField('Date of creation', auto_now_add=True)
 

@@ -151,3 +151,19 @@ def button_type(request, type_filter: str):
         buttons = Button.objects.filter(type=type_filter).all()
         serializer = ButtonSerializer(buttons, many=True)
         return JsonResponse(serializer.data, safe=False)
+
+
+@api_view(['PUT', 'DELETE'])
+@parser_classes([JSONParser])
+@mfc_auth_token
+@error_handler_basic
+def button_problem(request, pk: int, problem_pk: int):
+    if request.method == 'PUT':
+        button = Button.objects.get(pk=pk)
+        button.problems.add(problem_pk)
+        return JsonResponse(ButtonSerializer(button).data)
+
+    if request.method == 'DELETE':
+        button = Button.objects.get(pk=pk)
+        button.problems.remove(problem_pk)
+        return JsonResponse(ButtonSerializer(button).data)

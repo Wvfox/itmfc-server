@@ -1,12 +1,12 @@
 meta {
-  name: Remove
+  name: Add problem
   type: http
-  seq: 8
+  seq: 6
 }
 
-delete {
-  url: {{HELPDESK}}/button/1
-  body: none
+put {
+  url: {{HELPDESK}}/button/4/problem/6
+  body: json
   auth: none
 }
 
