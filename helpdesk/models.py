@@ -65,3 +65,21 @@ class Application(models.Model):
 
     def __str__(self):
         return self.category
+
+
+class Button(models.Model):
+    title = models.CharField('Title btn', max_length=32)
+    type = models.CharField('Type btn', max_length=32, default='category', blank=True, null=True)
+    order = models.PositiveSmallIntegerField('Order btn', default=1, blank=True, null=True)
+    size = models.CharField('Size btn', max_length=16, default='small', blank=True, null=True)
+    departament = models.CharField('Departament', max_length=32, blank=True, null=True)
+    layout = models.CharField('Layout category', max_length=16, blank=True, null=True)
+    updated_at = models.DateField('Date of updating', auto_now=True)
+    created_at = models.DateField('Date of creation', auto_now_add=True)
+
+    class Meta:
+        ordering = ['created_at']
+
+    def __str__(self):
+        return self.title
+

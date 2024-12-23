@@ -86,3 +86,68 @@ def application_detail(request, pk: int):
         return HttpResponse(status=204)
 
 
+'''---------------------------------------------------------------------
+=========================== Button request =============================
+---------------------------------------------------------------------'''
+
+
+@api_view(['GET', 'POST'])
+@parser_classes([JSONParser])
+@mfc_auth_token
+@error_handler_basic
+def button_list(request):
+    """
+    List all(GET) button, or create(POST) a new button.
+    """
+    data = request.data
+
+    if request.method == 'GET':
+        buttons = Button.objects.all()
+        serializer = ButtonSerializer(buttons, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    elif request.method == 'POST':
+        serializer = ButtonSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return JsonResponse(serializer.data, status=201)
+
+
+@api_view(['GET', 'PUT', 'DELETE'])
+@parser_classes([JSONParser])
+@mfc_auth_token
+@error_handler_basic
+def button_detail(request, pk: int):
+    """
+    View(GET), update(PUT) or delete(DELETE) a button.
+    """
+    button = Button.objects.get(pk=pk)
+    data = request.data
+
+    if request.method == 'GET':
+        serializer = ButtonSerializer(button)
+        return JsonResponse(serializer.data)
+
+    elif request.method == 'PUT':
+        if not data.get('title'):
+            data['title'] = button.title
+        # === Serializer ===
+        serializer = ButtonSerializer(button, data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return JsonResponse(serializer.data, status=201)
+
+    elif request.method == 'DELETE':
+        button.delete()
+        return HttpResponse(status=204)
+
+
+@api_view(['GET'])
+@parser_classes([JSONParser])
+@mfc_auth_token
+@error_handler_basic
+def button_type(request, type_filter: str):
+    if request.method == 'GET':
+        buttons = Button.objects.filter(type=type_filter).all()
+        serializer = ButtonSerializer(buttons, many=True)
+        return JsonResponse(serializer.data, safe=False)

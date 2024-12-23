@@ -14,3 +14,11 @@ class ApplicationSerializer(serializers.ModelSerializer):
         model = Application
         fields = '__all__'
         read_only_fields = ('id', 'updated_at', 'created_at')
+
+
+class ButtonSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Button
+        fields = '__all__'
+        read_only_fields = ('id', 'updated_at', 'created_at')
