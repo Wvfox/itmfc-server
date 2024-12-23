@@ -8,6 +8,7 @@ urlpatterns = [
     re_path(r'^operator/(?P<pk>\d+)$', operator_detail),
     re_path(r'^operator/username/(?P<username>[-.\w]+)$', operator_detail),
     re_path(r'^operator/tg-id/(?P<tg_id>\d+)$', operator_detail),
+    re_path(r'^operator/birthday$', operator_birthday),
     re_path(r'^printer$', printer_list),
     re_path(r'^printer/(?P<ip>[-.\w]+)$', printer_detail),
     re_path(r'^workstation$', workstation_list),

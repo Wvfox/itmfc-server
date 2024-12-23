@@ -1,3 +1,5 @@
+import datetime
+
 from django.http import HttpResponse, JsonResponse
 from rest_framework.parsers import JSONParser
 from rest_framework.decorators import api_view, parser_classes
@@ -67,6 +69,21 @@ def operator_detail(request, pk=None, username=None, tg_id=None):
     elif request.method == 'DELETE':
         operator.delete()
         return HttpResponse(status=204)
+
+
+@api_view(['GET'])
+@parser_classes([JSONParser])
+@mfc_auth_token
+@error_handler_basic
+def operator_birthday(request):
+    """
+    List all(GET) operator now birthday.
+    """
+    if request.method == 'GET':
+        current_date = datetime.datetime.now().strftime('%m-%d')
+        operators = Operator.objects.filter(birthday__contains=current_date).all()
+        serializer = OperatorSerializer(operators, many=True)
+        return JsonResponse(serializer.data, safe=False)
 
 
 '''---------------------------------------------------------------------
