@@ -39,7 +39,7 @@ def operator_list(request):
 @parser_classes([JSONParser])
 @mfc_auth_token
 @error_handler_basic
-def operator_detail(request, pk=None, username=None, tg_id=None):
+def operator_detail(request, pk=None, username=None, tg_id=None, tag=None):
     """
     View(GET), update(PUT) or delete(DELETE) a operator.
     """
@@ -49,6 +49,8 @@ def operator_detail(request, pk=None, username=None, tg_id=None):
         operator = Operator.objects.get(username=username)
     elif tg_id:
         operator = Operator.objects.get(tg_id=tg_id)
+    elif tag:
+        operator = Operator.objects.get(tag=tag)
     data = request.data
 
     if request.method == 'GET':

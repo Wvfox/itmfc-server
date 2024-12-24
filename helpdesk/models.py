@@ -59,6 +59,7 @@ class Application(models.Model):
     )
     layout = models.CharField('Layout', max_length=16, blank=True, null=True)
     step = models.PositiveSmallIntegerField('Step', default=1, blank=True, null=True)
+    owner_tg = models.PositiveSmallIntegerField('Owner tg', blank=True, null=True)
     updated_at = models.DateField('Date of updating', auto_now=True)
     created_at = models.DateField('Date of creation', auto_now_add=True)
 

@@ -86,6 +86,18 @@ def application_detail(request, pk: int):
         return HttpResponse(status=204)
 
 
+@api_view(['GET'])
+@parser_classes([JSONParser])
+@mfc_auth_token
+@error_handler_basic
+def application_actual(request, operator_id: int):
+    if request.method == 'GET':
+        if Application.objects.filter(status='waiting', owner_tg=operator_id).exists():
+            return HttpResponse()
+        return HttpResponse(status=404)
+
+
+
 '''---------------------------------------------------------------------
 =========================== Button request =============================
 ---------------------------------------------------------------------'''

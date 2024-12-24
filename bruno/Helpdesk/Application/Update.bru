@@ -1,18 +1,17 @@
 meta {
   name: Update
   type: http
-  seq: 4
+  seq: 5
 }
 
 put {
-  url: {{HELPDESK}}/application/1
+  url: {{HELPDESK}}/application/4
   body: json
   auth: none
 }
 
 body:json {
   {
-    "status": "test",
-    "signer_id": 2051812677
+    "status": "complete"
   }
 }
