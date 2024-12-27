@@ -12,7 +12,7 @@ def error_handler_basic(func):
         try:
             return func(*args, **kwargs)
         except ObjectDoesNotExist as ex:
-            return JsonResponse({'Message': (str(ex))}, status=404)
+            return JsonResponse({'Message': 'Not found'}, status=404)
         except IntegrityError as ex:
             return JsonResponse({'Message': (str(ex))}, status=406)
         except Exception as ex:
