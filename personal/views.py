@@ -82,7 +82,7 @@ def operator_birthday(request):
     List all(GET) operator now birthday.
     """
     if request.method == 'GET':
-        current_date = datetime.datetime.now().strftime('%m-%d')
+        current_date = datetime.datetime.now().strftime('-%m-%d')
         operators = Operator.objects.filter(birthday__contains=current_date).all()
         serializer = OperatorSerializer(operators, many=True)
         return JsonResponse(serializer.data, safe=False)
