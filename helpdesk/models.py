@@ -5,9 +5,7 @@ from personal.models import Workstation, Operator
 
 class Application(models.Model):
     category = models.CharField('Category', max_length=64)
-    user_name = models.CharField('User name', max_length=64, blank=True, null=True)
-    user_tag = models.CharField('Tag name', max_length=64, blank=True, null=True)
-    user_location = models.CharField('Location', max_length=32, blank=True, null=True)
+    location = models.CharField('Location', max_length=32, blank=True, null=True)
     operator = models.ForeignKey(
         Operator,
         on_delete=models.SET_NULL,
