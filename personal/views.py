@@ -97,7 +97,6 @@ def operator_ecp(request):
     List all(GET) operator ecp less month.
     """
     if request.method == 'GET':
-        year, month, day = datetime.datetime.now().strftime('%y-%m-%d').split('-')
         start_date = datetime.datetime.today()
         end_date = datetime.datetime.today() + datetime.timedelta(days=30)
         operators = Operator.objects.filter(
