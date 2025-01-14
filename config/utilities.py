@@ -58,7 +58,7 @@ def clear_dir_media():
 @parser_classes([JSONParser])
 def get_src_file(request, media_url: str):
     """Get file from MEDIA"""
-    src = open((str(BASE_DIR) + media_url), 'rb')
+    src = open((str(BASE_DIR) + '/' + media_url), 'rb')
     return FileResponse(src)
 
 
