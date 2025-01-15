@@ -13,7 +13,7 @@ from config.utilities import get_video_duration, clear_dir_media
 from .serializers import *
 
 
-LOCATION_LIST = ['voskresensk', 'beloozerskiy']
+LOCATION_LIST = ['bot', 'voskresensk', 'beloozerskiy']
 
 
 @api_view(['GET', 'POST'])
