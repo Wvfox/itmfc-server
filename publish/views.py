@@ -121,9 +121,6 @@ def clip_detail(request, pk: int):
 @api_view(['GET'])
 @parser_classes([JSONParser])
 def nonstop_location(request, location: str):
-    """
-
-    """
     if request.method == 'GET':
         locations = Location.objects.all().filter(name=location, is_nonstop=True)
         # category = Subcategory.objects.get(pk=pk).category_set.all().first()
@@ -134,17 +131,24 @@ def nonstop_location(request, location: str):
         return JsonResponse(serializer.data, safe=False)
 
 
-@api_view(['GET'])
+@api_view(['GET', 'PUT'])
 @parser_classes([JSONParser])
 def clip_submit(request):
-    """
-
-    """
     if request.method == 'GET':
         clips = Clip.objects.all().filter(is_submit=False)
         serializer = ClipSerializer(clips, many=True)
         return JsonResponse(serializer.data, safe=False)
 
+
+@api_view(['PUT'])
+@parser_classes([JSONParser])
+def clip_check(request, pk: int):
+    if request.method == 'PUT':
+        clip = Clip.objects.get(pk=pk)
+        clip.is_submit = True
+        clip.save()
+        serializer = ClipSerializer(clip)
+        return JsonResponse(serializer.data, safe=False)
 
 
 @api_view(['GET', 'POST'])
@@ -171,10 +175,10 @@ def location_list(request):
             return HttpResponse(status=406)
 
 
-@api_view(['GET'])
+@api_view(['PUT'])
 @parser_classes([JSONParser])
 def location_check(request, pk: int):
-    if request.method == 'GET':
+    if request.method == 'PUT':
         location = Location.objects.get(pk=pk)
         location.is_nonstop = False
         location.save()
