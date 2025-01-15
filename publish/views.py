@@ -13,7 +13,7 @@ from config.utilities import get_video_duration, clear_dir_media
 from .serializers import *
 
 
-LOCATION_LIST = ['bot', 'voskresensk', 'beloozerskiy']
+LOCATION_LIST = ['voskresensk', 'beloozerskiy']
 
 
 @api_view(['GET', 'POST'])
@@ -118,11 +118,11 @@ def clip_detail(request, pk: int):
         return HttpResponse(status=204)
 
 
-@api_view(['GET', 'POST'])
+@api_view(['GET'])
 @parser_classes([JSONParser])
 def nonstop_location(request, location: str):
     """
-    Shuffle list all(GET) clips.
+
     """
     if request.method == 'GET':
         locations = Location.objects.all().filter(name=location, is_nonstop=True)
@@ -132,6 +132,19 @@ def nonstop_location(request, location: str):
             clips.append(loc.clip_set.all().first())
         serializer = ClipSerializer(clips, many=True)
         return JsonResponse(serializer.data, safe=False)
+
+
+@api_view(['GET'])
+@parser_classes([JSONParser])
+def clip_submit(request):
+    """
+
+    """
+    if request.method == 'GET':
+        clips = Clip.objects.all().filter(is_submit=False)
+        serializer = ClipSerializer(clips, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
 
 
 @api_view(['GET', 'POST'])

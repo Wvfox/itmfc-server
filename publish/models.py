@@ -24,6 +24,7 @@ class Clip(models.Model):
     )
     expiration_date = models.DateField(blank=True, null=True)
     duration = models.PositiveSmallIntegerField(blank=True, null=True)
+    is_submit = models.BooleanField(default=False)
     updated_at = models.DateField('Date of updating', auto_now=True)
     locations = models.ManyToManyField(Location, blank=True)
     created_at = models.DateField('Date of creation', auto_now_add=True)
