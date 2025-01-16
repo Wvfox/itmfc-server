@@ -7,7 +7,7 @@ from django.http import JsonResponse, HttpResponse
 from rest_framework.decorators import api_view, parser_classes
 from rest_framework.parsers import MultiPartParser, JSONParser
 
-
+from config.decorators import error_handler_basic
 from config.settings import MEDIA_ROOT, MEDIA_URL
 from config.utilities import get_video_duration, clear_dir_media
 from .serializers import *
@@ -18,6 +18,7 @@ LOCATION_LIST = ['voskresensk', 'beloozerskiy']
 
 @api_view(['GET', 'POST'])
 @parser_classes([MultiPartParser])
+@error_handler_basic
 def clip_list(request):
     """
     List all(GET) clips, or create(POST) a new clip.
@@ -36,21 +37,16 @@ def clip_list(request):
             data['expiration_date'] = f'{year}-{month}-{day}'
         data._mutable = _mutable
         serializer = ClipSerializer(data=data)
-        try:
-            if serializer.is_valid():
-                serializer.save()
-                # get video
-                clip = Clip.objects.get(id=serializer.data['id'])
-                # write duration video
-                clip.duration = get_video_duration(str(MEDIA_ROOT) + str(clip.media))
-                for loc in LOCATION_LIST:
-                    clip.locations.create(name=loc)
-                clip.save()
-                return JsonResponse(ClipSerializer(clip).data, status=201)
-            return JsonResponse(serializer.errors, status=400)
-        except IntegrityError as ex:
-            print(ex)
-            return HttpResponse(status=406)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        # get video
+        clip = Clip.objects.get(id=serializer.data['id'])
+        # write duration video
+        clip.duration = get_video_duration(str(MEDIA_ROOT) + str(clip.media))
+        for loc in LOCATION_LIST:
+            clip.locations.create(name=loc)
+        clip.save()
+        return JsonResponse(ClipSerializer(clip).data, status=201)
 
 
 # # convert video (bad quality)
@@ -66,6 +62,7 @@ def clip_list(request):
 
 @api_view(['GET', 'POST'])
 @parser_classes([JSONParser])
+@error_handler_basic
 def clip_list_shuffle(request):
     """
     Shuffle list all(GET) clips.
@@ -78,15 +75,13 @@ def clip_list_shuffle(request):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 @parser_classes([MultiPartParser])
+@error_handler_basic
 def clip_detail(request, pk: int):
     """
     View(GET), update(PUT) or delete(DELETE) a clip.
     """
-    try:
-        clip = Clip.objects.get(pk=pk)
-        data = request.data
-    except Clip.DoesNotExist:
-        return HttpResponse(status=404)
+    clip = Clip.objects.get(pk=pk)
+    data = request.data
 
     if request.method == 'GET':
         serializer = ClipSerializer(clip)
@@ -99,13 +94,9 @@ def clip_detail(request, pk: int):
             data['media'] = clip.media
         data._mutable = _mutable
         serializer = ClipSerializer(clip, data=data)
-        try:
-            if serializer.is_valid():
-                serializer.save()
-                return JsonResponse(serializer.data)
-            return JsonResponse(serializer.errors, status=400)
-        except IntegrityError:
-            return HttpResponse(status=406)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return JsonResponse(serializer.data)
 
     elif request.method == 'DELETE':
         if clip.media:
@@ -120,6 +111,7 @@ def clip_detail(request, pk: int):
 
 @api_view(['GET'])
 @parser_classes([JSONParser])
+@error_handler_basic
 def nonstop_location(request, location: str):
     if request.method == 'GET':
         locations = Location.objects.all().filter(name=location, is_nonstop=True)
@@ -133,6 +125,7 @@ def nonstop_location(request, location: str):
 
 @api_view(['GET', 'PUT'])
 @parser_classes([JSONParser])
+@error_handler_basic
 def clip_submit(request):
     if request.method == 'GET':
         clips = Clip.objects.all().filter(is_submit=False)
@@ -142,6 +135,7 @@ def clip_submit(request):
 
 @api_view(['PUT'])
 @parser_classes([JSONParser])
+@error_handler_basic
 def clip_check(request, pk: int):
     if request.method == 'PUT':
         clip = Clip.objects.get(pk=pk)
@@ -153,6 +147,7 @@ def clip_check(request, pk: int):
 
 @api_view(['GET', 'POST'])
 @parser_classes([JSONParser])
+@error_handler_basic
 def location_list(request):
     """
     List all(GET) locations, or create(POST) a new location.
@@ -165,18 +160,14 @@ def location_list(request):
 
     elif request.method == 'POST':
         serializer = LocationSerializer(data=data)
-        try:
-            if serializer.is_valid():
-                serializer.save()
-                return JsonResponse(serializer.data, status=201)
-            return JsonResponse(serializer.errors, status=400)
-        except IntegrityError as ex:
-            print(ex)
-            return HttpResponse(status=406)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return JsonResponse(serializer.data, status=201)
 
 
 @api_view(['PUT'])
 @parser_classes([JSONParser])
+@error_handler_basic
 def location_check(request, pk: int):
     if request.method == 'PUT':
         location = Location.objects.get(pk=pk)
@@ -188,15 +179,13 @@ def location_check(request, pk: int):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 @parser_classes([JSONParser])
+@error_handler_basic
 def location_detail(request, pk: int):
     """
     View(GET), update(PUT) or delete(DELETE) a location.
     """
-    try:
-        location = Location.objects.get(pk=pk)
-        data = request.data
-    except Location.DoesNotExist:
-        return HttpResponse(status=404)
+    location = Location.objects.get(pk=pk)
+    data = request.data
 
     if request.method == 'GET':
         serializer = LocationSerializer(location)
@@ -204,13 +193,9 @@ def location_detail(request, pk: int):
 
     elif request.method == 'PUT':
         serializer = LocationSerializer(location, data=data)
-        try:
-            if serializer.is_valid():
-                serializer.save()
-                return JsonResponse(serializer.data)
-            return JsonResponse(serializer.errors, status=400)
-        except IntegrityError:
-            return HttpResponse(status=406)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return JsonResponse(serializer.data)
 
     elif request.method == 'DELETE':
         location.delete()
