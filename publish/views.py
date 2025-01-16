@@ -30,12 +30,6 @@ def clip_list(request):
         return JsonResponse(serializer.data, safe=False)
 
     elif request.method == 'POST':
-        _mutable = data._mutable
-        data._mutable = True
-        if data.get('expiration_date'):
-            day, month, year = data['expiration_date'].split('.')
-            data['expiration_date'] = f'{year}-{month}-{day}'
-        data._mutable = _mutable
         serializer = ClipSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
