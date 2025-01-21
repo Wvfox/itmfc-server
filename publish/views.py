@@ -25,7 +25,7 @@ def clip_list(request):
     """
     data = request.data
     if request.method == 'GET':
-        clips = Clip.objects.all()
+        clips = Clip.objects.all().filter(is_wrong=False)
         serializer = ClipSerializer(clips, many=True)
         return JsonResponse(serializer.data, safe=False)
 
@@ -62,7 +62,7 @@ def clip_list_shuffle(request):
     Shuffle list all(GET) clips.
     """
     if request.method == 'GET':
-        clips = Clip.objects.all().order_by('?')
+        clips = Clip.objects.all().filter(is_wrong=False).order_by('?')
         serializer = ClipSerializer(clips, many=True)
         return JsonResponse(serializer.data, safe=False)
 
@@ -122,7 +122,7 @@ def nonstop_location(request, location: str):
 @error_handler_basic
 def clip_submit(request):
     if request.method == 'GET':
-        clips = Clip.objects.all().filter(is_submit=False)
+        clips = Clip.objects.all().filter(is_submit=False, is_wrong=False)
         serializer = ClipSerializer(clips, many=True)
         return JsonResponse(serializer.data, safe=False)
 
@@ -136,6 +136,28 @@ def clip_check(request, pk: int):
         clip.is_submit = True
         clip.save()
         serializer = ClipSerializer(clip)
+        return JsonResponse(serializer.data, safe=False)
+
+
+@api_view(['PUT'])
+@parser_classes([JSONParser])
+@error_handler_basic
+def clip_wrong_check(request, pk: int):
+    if request.method == 'PUT':
+        clip = Clip.objects.get(pk=pk)
+        clip.is_wrong = True
+        clip.save()
+        serializer = ClipSerializer(clip)
+        return JsonResponse(serializer.data, safe=False)
+
+
+@api_view(['GET'])
+@parser_classes([JSONParser])
+@error_handler_basic
+def clip_wrong_list(request):
+    if request.method == 'GET':
+        clips = Clip.objects.all().filter(is_wrong=True)
+        serializer = ClipSerializer(clips, many=True)
         return JsonResponse(serializer.data, safe=False)
 
 
