@@ -112,7 +112,7 @@ def nonstop_location(request, location: str):
         # category = Subcategory.objects.get(pk=pk).category_set.all().first()
         clips = []
         for loc in locations:
-            clips.append(loc.clip_set.all().first())
+            clips.append(loc.clip_set.all().filter(is_wrong=False).first())
         serializer = ClipSerializer(clips, many=True)
         return JsonResponse(serializer.data, safe=False)
 
