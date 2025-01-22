@@ -109,10 +109,10 @@ def clip_detail(request, pk: int):
 def nonstop_location(request, location: str):
     if request.method == 'GET':
         locations = Location.objects.all().filter(name=location, is_nonstop=True)
-        # category = Subcategory.objects.get(pk=pk).category_set.all().first()
         clips = []
         for loc in locations:
-            clips.append(loc.clip_set.all().filter(is_wrong=False).first())
+            if loc.clip_set.all().filter(is_wrong=False).exists():
+                clips.append(loc.clip_set.all().first())
         serializer = ClipSerializer(clips, many=True)
         return JsonResponse(serializer.data, safe=False)
 
