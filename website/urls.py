@@ -4,5 +4,5 @@ from .views import *
 
 urlpatterns = [
     # re_path(r'^$', views.index, name='index'),
-    re_path(r'^form$', send_file_form),
+    re_path(r'^vacancy$', send_vacancy),
 ]

@@ -1,14 +1,11 @@
 import os.path
-import random
-from os.path import splitext
 
-from django.db import IntegrityError
 from django.http import JsonResponse, HttpResponse
 from rest_framework.decorators import api_view, parser_classes
 from rest_framework.parsers import MultiPartParser, JSONParser
 
 from config.decorators import error_handler_basic
-from config.settings import MEDIA_ROOT, MEDIA_URL
+from config.settings import MEDIA_ROOT
 from config.utilities import get_video_duration, clear_dir_media
 from .serializers import *
 
@@ -24,6 +21,7 @@ def clip_list(request):
     List all(GET) clips, or create(POST) a new clip.
     """
     data = request.data
+
     if request.method == 'GET':
         clips = Clip.objects.all().filter(is_wrong=False)
         serializer = ClipSerializer(clips, many=True)
