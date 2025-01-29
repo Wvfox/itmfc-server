@@ -20,7 +20,6 @@ DEBUG = os.environ.get("PROD_MODE") != "true"
 ALLOWED_HOSTS = ['*']
 CORS_ALLOW_ALL_ORIGINS = True
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -141,3 +140,15 @@ MEDIA_ROOT = os.path.join(BASE_DIR, MEDIA_URL)
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Send mail
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+RECIPIENT_ADDRESS = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST = os.environ.get("EMAIL_HOST")
+EMAIL_PORT = os.environ.get("EMAIL_PORT")
+EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS")
+EMAIL_USE_SSL = os.environ.get("EMAIL_USE_SSL")
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
