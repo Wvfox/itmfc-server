@@ -18,7 +18,8 @@ def send_file_form(request):
             subject='Вакансии',
             message='Тестовое сообщение',
             from_email=settings.EMAIL_HOST_USER,
-            recipient_list=[settings.RECIPIENT_ADDRESS]
+            recipient_list=[settings.RECIPIENT_ADDRESS],
+            fail_silently=False,
         )
         return HttpResponse()
 
