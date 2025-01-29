@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'personal.apps.PersonalConfig',
     'task.apps.TaskConfig',
     'publish.apps.PublishConfig',
+    'website.apps.WebsiteConfig',
     'rest_framework'
 ]
 
