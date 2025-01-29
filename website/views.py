@@ -18,10 +18,11 @@ def send_vacancy(request):
         serializer = VacancySerializer(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        url = serializer.data['media'].url
         send_mail(
             subject='Вакансии - резюме',
             message=f'Резюме можно просмотреть по ссылке ниже:\n'
-                    f'https://api.itmfc.ru/api/file/{serializer.data['media'].url}',
+                    f'https://api.itmfc.ru/api/file/{url}',
             from_email=settings.EMAIL_HOST_USER,
             recipient_list=[settings.RECIPIENT_ADDRESS],
             fail_silently=False,
