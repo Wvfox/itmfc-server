@@ -20,7 +20,7 @@ def send_vacancy(request):
         serializer.save()
         url = serializer.data['media']
         send_mail(
-            subject='Вакансии - резюме',
+            subject='Вакансии - резюме (с сайта https://vos-mfc.ru)',
             message=f'Резюме можно просмотреть по ссылке ниже:\n'
                     f'https://api.itmfc.ru/api/file/{url}',
             from_email=settings.EMAIL_HOST_USER,
