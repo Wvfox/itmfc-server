@@ -34,7 +34,7 @@ def clip_list(request):
         # get video
         clip = Clip.objects.get(id=serializer.data['id'])
         # write duration video
-        clip.duration = get_video_duration(str(MEDIA_ROOT) + str(clip.media))
+        clip.duration = get_video_duration(str(MEDIA_ROOT) + str(clip.media)) + 2
         for loc in LOCATION_LIST:
             clip.locations.create(name=loc)
         clip.save()
