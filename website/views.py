@@ -24,7 +24,7 @@ def send_vacancy(request):
             message=f'Резюме можно просмотреть по ссылке ниже:\n'
                     f'https://api.itmfc.ru/api/file/{url}',
             from_email=settings.EMAIL_HOST_USER,
-            recipient_list=[settings.RECIPIENT_ADDRESS],
+            recipient_list=settings.RECIPIENT_ADDRESS,
             fail_silently=False,
         )
         return JsonResponse(serializer.data, status=201)
