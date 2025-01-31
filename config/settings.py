@@ -145,7 +145,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-RECIPIENT_ADDRESS = os.environ.get("EMAIL_HOST_USER")
+RECIPIENT_ADDRESS = ['mfc-voskresenskmr@mosreg.ru']
 EMAIL_HOST = os.environ.get("EMAIL_HOST")
 EMAIL_PORT = os.environ.get("EMAIL_PORT")
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
