@@ -5,7 +5,7 @@ from config.utilities import UUIDFileStorage
 
 class Vacancy(models.Model):
     media = models.FileField(
-        upload_to='vacancy',
+        upload_to='website/vacancy',
         storage=UUIDFileStorage()
     )
     created_at = models.DateField('Date of creation', auto_now_add=True)
