@@ -6,7 +6,7 @@ from rest_framework.parsers import MultiPartParser, JSONParser
 
 from config.decorators import error_handler_basic
 from config.settings import MEDIA_ROOT
-from config.utilities import get_video_duration, clear_dir_media
+from config.utilities import get_video_duration, clear_dir_media, encrypt_aes, decrypt_aes
 from .serializers import *
 
 
@@ -28,6 +28,9 @@ def clip_list(request):
         return JsonResponse(serializer.data, safe=False)
 
     elif request.method == 'POST':
+        key = decrypt_aes(data['cypher'])
+        if key != os.environ.get("UPLOAD_TOKEN"):
+            return JsonResponse({'Message': 'Failed authorization'}, status=403)
         serializer = ClipSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -41,18 +44,7 @@ def clip_list(request):
         return JsonResponse(ClipSerializer(clip).data, status=201)
 
 
-# # convert video (bad quality)
-# path, ext = splitext(str(clip.media))
-# moviepy.VideoFileClip(clip.media.path).write_videofile(f'{MEDIA_URL}{path}.webm')
-# # rewrite path in database
-# clip.media = f'{path}.webm'
-# # delete old video
-# if os.path.exists(f'{MEDIA_URL}{path}{ext}'):
-#     os.remove(f'{MEDIA_URL}{path}{ext}')
-# add location
-
-
-@api_view(['GET', 'POST'])
+@api_view(['GET'])
 @parser_classes([JSONParser])
 @error_handler_basic
 def clip_list_shuffle(request):
@@ -80,6 +72,9 @@ def clip_detail(request, pk: int):
         return JsonResponse(serializer.data)
 
     elif request.method == 'PUT':
+        key = decrypt_aes(data['cypher'])
+        if key != os.environ.get("UPLOAD_TOKEN"):
+            return JsonResponse({'Message': 'Failed authorization'}, status=403)
         _mutable = data._mutable
         data._mutable = True
         if not data.get('media'):
@@ -115,7 +110,7 @@ def nonstop_location(request, location: str):
         return JsonResponse(serializer.data, safe=False)
 
 
-@api_view(['GET', 'PUT'])
+@api_view(['GET'])
 @parser_classes([JSONParser])
 @error_handler_basic
 def clip_submit(request):
