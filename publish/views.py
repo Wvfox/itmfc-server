@@ -1,3 +1,4 @@
+import datetime
 import os.path
 
 from django.http import JsonResponse, HttpResponse
@@ -52,7 +53,10 @@ def clip_list_shuffle(request):
     Shuffle list all(GET) clips.
     """
     if request.method == 'GET':
-        clips = Clip.objects.all().filter(is_wrong=False).order_by('?')
+        clips = Clip.objects.all().filter(
+            is_wrong=False,
+            expiration_date__gte=datetime.datetime.today()
+        ).order_by('?')
         serializer = ClipSerializer(clips, many=True)
         return JsonResponse(serializer.data, safe=False)
 
