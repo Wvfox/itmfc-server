@@ -79,7 +79,6 @@ def clip_list_expiration(request):
 
 @api_view(['GET', 'PUT'])
 @parser_classes([MultiPartParser])
-@mfc_auth_token
 @error_handler_basic
 def clip_detail(request, pk: int):
     """
