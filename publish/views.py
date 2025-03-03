@@ -61,6 +61,22 @@ def clip_list_shuffle(request):
         return JsonResponse(serializer.data, safe=False)
 
 
+@api_view(['GET'])
+@parser_classes([JSONParser])
+@error_handler_basic
+def clip_list_expiration(request):
+    """
+    Shuffle list all(GET) clips.
+    """
+    if request.method == 'GET':
+        clips = Clip.objects.all().filter(
+            is_wrong=False,
+            expiration_date__lte=datetime.datetime.today()
+        )
+        serializer = ClipSerializer(clips, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+
 @api_view(['GET', 'PUT', 'DELETE'])
 @parser_classes([MultiPartParser])
 @error_handler_basic
