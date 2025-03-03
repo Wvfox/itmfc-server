@@ -71,7 +71,7 @@ def clip_list_expiration(request):
     if request.method == 'GET':
         clips = Clip.objects.all().filter(
             is_wrong=False,
-            expiration_date__lte=datetime.datetime.today()
+            expiration_date__lt=datetime.datetime.today()
         )
         serializer = ClipSerializer(clips, many=True)
         return JsonResponse(serializer.data, safe=False)
