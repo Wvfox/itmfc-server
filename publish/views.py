@@ -5,7 +5,7 @@ from django.http import JsonResponse, HttpResponse
 from rest_framework.decorators import api_view, parser_classes
 from rest_framework.parsers import MultiPartParser, JSONParser
 
-from config.decorators import error_handler_basic
+from config.decorators import error_handler_basic, mfc_auth_token
 from config.settings import MEDIA_ROOT
 from config.utilities import get_video_duration, clear_dir_media, encrypt_aes, decrypt_aes
 from .serializers import *
@@ -77,8 +77,9 @@ def clip_list_expiration(request):
         return JsonResponse(serializer.data, safe=False)
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view(['GET', 'PUT'])
 @parser_classes([MultiPartParser])
+@mfc_auth_token
 @error_handler_basic
 def clip_detail(request, pk: int):
     """
@@ -90,22 +91,34 @@ def clip_detail(request, pk: int):
     if request.method == 'GET':
         serializer = ClipSerializer(clip)
         return JsonResponse(serializer.data)
+#
+#     elif request.method == 'PUT':
+#         key = decrypt_aes(data['cypher'])
+#         if key != os.environ.get("UPLOAD_TOKEN"):
+#             return JsonResponse({'Message': 'Failed authorization'}, status=403)
+#         _mutable = data._mutable
+#         data._mutable = True
+#         if not data.get('media'):
+#             data['media'] = clip.media
+#         data._mutable = _mutable
+#         serializer = ClipSerializer(clip, data=data)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return JsonResponse(serializer.data)
 
-    elif request.method == 'PUT':
-        key = decrypt_aes(data['cypher'])
-        if key != os.environ.get("UPLOAD_TOKEN"):
-            return JsonResponse({'Message': 'Failed authorization'}, status=403)
-        _mutable = data._mutable
-        data._mutable = True
-        if not data.get('media'):
-            data['media'] = clip.media
-        data._mutable = _mutable
-        serializer = ClipSerializer(clip, data=data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return JsonResponse(serializer.data)
 
-    elif request.method == 'DELETE':
+
+@api_view(['DELETE'])
+@parser_classes([MultiPartParser])
+@mfc_auth_token
+@error_handler_basic
+def clip_delete(request, pk: int):
+    """
+    View(GET), update(PUT) or delete(DELETE) a clip.
+    """
+    clip = Clip.objects.get(pk=pk)
+
+    if request.method == 'DELETE':
         if clip.media:
             if os.path.exists(clip.media.path):
                 os.remove(clip.media.path)
@@ -142,6 +155,7 @@ def clip_submit(request):
 
 @api_view(['PUT'])
 @parser_classes([JSONParser])
+@mfc_auth_token
 @error_handler_basic
 def clip_check(request, pk: int):
     if request.method == 'PUT':
@@ -154,6 +168,7 @@ def clip_check(request, pk: int):
 
 @api_view(['PUT'])
 @parser_classes([JSONParser])
+@mfc_auth_token
 @error_handler_basic
 def clip_wrong_check(request, pk: int):
     if request.method == 'PUT':
@@ -176,6 +191,7 @@ def clip_wrong_list(request):
 
 @api_view(['GET', 'POST'])
 @parser_classes([JSONParser])
+@mfc_auth_token
 @error_handler_basic
 def location_list(request):
     """
@@ -196,6 +212,7 @@ def location_list(request):
 
 @api_view(['PUT'])
 @parser_classes([JSONParser])
+@mfc_auth_token
 @error_handler_basic
 def location_check(request, pk: int):
     if request.method == 'PUT':
@@ -208,6 +225,7 @@ def location_check(request, pk: int):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 @parser_classes([JSONParser])
+@mfc_auth_token
 @error_handler_basic
 def location_detail(request, pk: int):
     """
