@@ -1,10 +1,12 @@
 import datetime
+import os
 
 from django.http import HttpResponse, JsonResponse
 from rest_framework.parsers import JSONParser
 from rest_framework.decorators import api_view, parser_classes
 
 from config.decorators import error_handler_basic, mfc_auth_token
+from config.utilities import decrypt_aes
 from .serializers import *
 
 
@@ -33,6 +35,24 @@ def operator_list(request):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return JsonResponse(serializer.data, status=201)
+
+
+@api_view(['PATCH', 'POST'])
+@parser_classes([JSONParser])
+@error_handler_basic
+def operator_list_alt(request):
+    """
+    List all(GET) operators, or create(POST) a new operator.
+    """
+    data = request.data
+
+    if request.method == 'PATCH':
+        key = decrypt_aes(data['cypher'])
+        if key != os.environ.get("AES_TOKEN"):
+            return JsonResponse({'Message': 'Failed authorization'}, status=403)
+        operators = Operator.objects.all()
+        serializer = OperatorSerializer(operators, many=True)
+        return JsonResponse(serializer.data, safe=False)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -134,6 +154,24 @@ def printer_list(request):
         return JsonResponse(serializer.data, status=201)
 
 
+@api_view(['PATCH', 'POST'])
+@parser_classes([JSONParser])
+@error_handler_basic
+def printer_list_alt(request):
+    """
+    List all(GET) printers, or create(POST) a new printer.
+    """
+    data = request.data
+
+    if request.method == 'PATCH':
+        key = decrypt_aes(data['cypher'])
+        if key != os.environ.get("AES_TOKEN"):
+            return JsonResponse({'Message': 'Failed authorization'}, status=403)
+        printers = Printer.objects.all()
+        serializer = PrinterSerializer(printers, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+
 @api_view(['GET', 'PUT', 'DELETE'])
 @parser_classes([JSONParser])
 @mfc_auth_token
@@ -196,6 +234,24 @@ def workstation_list(request):
             current_workstation.save()
             return JsonResponse(WorkstationSerializer(current_workstation).data, status=201)
         return JsonResponse(serializer.data, status=201)
+
+
+@api_view(['PATCH', 'POST'])
+@parser_classes([JSONParser])
+@error_handler_basic
+def workstation_list_alt(request):
+    """
+    List all(GET) workstations, or create(POST) a new workstation.
+    """
+    data = request.data
+
+    if request.method == 'PATCH':
+        key = decrypt_aes(data['cypher'])
+        if key != os.environ.get("AES_TOKEN"):
+            return JsonResponse({'Message': 'Failed authorization'}, status=403)
+        workstations = Workstation.objects.all()
+        serializer = WorkstationSerializer(workstations, many=True)
+        return JsonResponse(serializer.data, safe=False)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
