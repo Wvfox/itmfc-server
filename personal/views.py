@@ -47,6 +47,8 @@ def operator_list_alt(request):
     data = request.data
 
     if request.method == 'PATCH':
+        if not data.get('cypher'):
+            return JsonResponse({'Message': 'Failed authorization'}, status=403)
         key = decrypt_aes(data['cypher'])
         if key != os.environ.get("AES_TOKEN"):
             return JsonResponse({'Message': 'Failed authorization'}, status=403)
@@ -164,6 +166,8 @@ def printer_list_alt(request):
     data = request.data
 
     if request.method == 'PATCH':
+        if not data.get('cypher'):
+            return JsonResponse({'Message': 'Failed authorization'}, status=403)
         key = decrypt_aes(data['cypher'])
         if key != os.environ.get("AES_TOKEN"):
             return JsonResponse({'Message': 'Failed authorization'}, status=403)
@@ -246,6 +250,8 @@ def workstation_list_alt(request):
     data = request.data
 
     if request.method == 'PATCH':
+        if not data.get('cypher'):
+            return JsonResponse({'Message': 'Failed authorization'}, status=403)
         key = decrypt_aes(data['cypher'])
         if key != os.environ.get("AES_TOKEN"):
             return JsonResponse({'Message': 'Failed authorization'}, status=403)
