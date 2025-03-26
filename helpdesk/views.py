@@ -97,6 +97,18 @@ def application_actual(request, operator_id: int):
         return HttpResponse(status=404)
 
 
+@api_view(['GET'])
+@parser_classes([JSONParser])
+@mfc_auth_token
+@error_handler_basic
+def application_last(request, operator_tg_id: int):
+    if request.method == 'GET':
+        operator = Operator.objects.get(tg_id=operator_tg_id)
+        if Application.objects.filter(operator=operator).order_by('-id').exists():
+            application = Application.objects.filter(operator=operator).order_by('-id').first()
+            return JsonResponse(ApplicationSerializer(application).data, status=200)
+        return JsonResponse({'Message': 'Not found'}, status=404)
+
 
 '''---------------------------------------------------------------------
 =========================== Button request =============================
