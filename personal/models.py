@@ -7,6 +7,8 @@ class Operator(models.Model):
     tag = models.CharField('Tag', max_length=64, unique=True, blank=True, null=True)
     tg_id = models.BigIntegerField('Tg user id', unique=True, blank=True, null=True)
     birthday = models.DateField('Birthday', max_length=32, blank=True, null=True)
+    telephone = models.CharField('Telephone', max_length=32, blank=True, null=True)
+    email = models.CharField('Email', max_length=128, blank=True, null=True)
     is_head = models.BooleanField('Head', default=False)
     is_admin = models.BooleanField('System administrator', default=False)
     departament = models.CharField('Departament', max_length=64, blank=True, null=True)
