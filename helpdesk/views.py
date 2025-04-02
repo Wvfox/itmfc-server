@@ -166,29 +166,30 @@ def button_detail(request, pk: int):
         return HttpResponse(status=204)
 
 
-@api_view(['GET', 'PUT'])
+@api_view(['POST'])
 @parser_classes([JSONParser])
 @student_mfc_token
 @error_handler_basic
-def button_detail_stud(request, pk: int):
-    """
-    View(GET), update(PUT) button.
-    """
-    button = Button.objects.get(pk=pk)
+def button_create_stud(request):
     data = request.data
+
+    if request.method == 'POST':
+        serializer = ButtonSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return JsonResponse(serializer.data, status=201)
+
+
+@api_view(['GET'])
+@parser_classes([JSONParser])
+@student_mfc_token
+@error_handler_basic
+def button_view_stud(request,  pk: int):
+    button = Button.objects.get(pk=pk)
 
     if request.method == 'GET':
         serializer = ButtonSerializer(button)
         return JsonResponse(serializer.data)
-
-    elif request.method == 'PUT':
-        if not data.get('title'):
-            data['title'] = button.title
-        # === Serializer ===
-        serializer = ButtonSerializer(button, data=data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return JsonResponse(serializer.data, status=201)
 
 
 @api_view(['GET'])

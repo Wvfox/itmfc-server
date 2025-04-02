@@ -11,7 +11,8 @@ urlpatterns = [
 
     re_path(r'^button$', button_list),
     re_path(r'^button/(?P<pk>\d+)$', button_detail),
-    re_path(r'^button/(?P<pk>\d+)/stud$', button_detail_stud),
+    re_path(r'^button/stud$', button_create_stud),
+    re_path(r'^button/(?P<pk>\d+)/stud$', button_view_stud),
     re_path(r'^button/type/(?P<type_filter>[-.\w]+)$', button_type),
     re_path(r'^button/(?P<pk>\d+)/problem/(?P<problem_pk>\d+)$', button_problem),
 ]

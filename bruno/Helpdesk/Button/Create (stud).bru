@@ -1,0 +1,26 @@
+meta {
+  name: Create (stud)
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{HELPDESK}}/button/stud
+  body: json
+  auth: none
+}
+
+headers {
+  Token: mfci32tstudent
+}
+
+body:json {
+  {
+    "title": "test-title-3",
+    "type": "problem",
+    "order": 1,
+    "size": "small",
+    "departament": "it",
+    "layout": "1101"
+  }
+}
