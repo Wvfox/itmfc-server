@@ -37,7 +37,7 @@ def mfc_auth_token(func):
 def student_mfc_token(func):
     def wrapper(*args, **kwargs):
         request = args[0]
-        if request.headers['Token'] != os.environ.get("STUD_TOKEN"):
+        if not request.headers.get('Token') or request.headers['Token'] != os.environ.get("STUD_TOKEN"):
             return JsonResponse({'Message': 'Failed authorization'}, status=403)
         return func(*args, **kwargs)
     return wrapper
