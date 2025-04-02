@@ -41,6 +41,31 @@ def application_list(request):
         return JsonResponse(serializer.data, status=201)
 
 
+@api_view(['GET', 'POST'])
+@parser_classes([JSONParser])
+@student_mfc_token
+@error_handler_basic
+def application_create_stud(request):
+    data = request.data
+
+    if request.method == 'GET':
+        return JsonResponse({'Message': 'Not found'}, status=404)
+
+    if request.method == 'POST':
+        serializer = ApplicationSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        if data.get('operator_username'):
+            serializer.validated_data['operator'] = Operator.objects.get(
+                username=data['operator_username']
+            )
+        if data.get('workstation_name'):
+            serializer.validated_data['workstation'] = Workstation.objects.get(
+                name_desktop=data['workstation_name']
+            )
+        serializer.save()
+        return JsonResponse(serializer.data, status=201)
+
+
 @api_view(['GET', 'PUT', 'DELETE'])
 @parser_classes([JSONParser])
 @mfc_auth_token
@@ -164,32 +189,6 @@ def button_detail(request, pk: int):
     elif request.method == 'DELETE':
         button.delete()
         return HttpResponse(status=204)
-
-
-@api_view(['POST'])
-@parser_classes([JSONParser])
-@student_mfc_token
-@error_handler_basic
-def button_create_stud(request):
-    data = request.data
-
-    if request.method == 'POST':
-        serializer = ButtonSerializer(data=data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return JsonResponse(serializer.data, status=201)
-
-
-@api_view(['GET'])
-@parser_classes([JSONParser])
-@student_mfc_token
-@error_handler_basic
-def button_view_stud(request,  pk: int):
-    button = Button.objects.get(pk=pk)
-
-    if request.method == 'GET':
-        serializer = ButtonSerializer(button)
-        return JsonResponse(serializer.data)
 
 
 @api_view(['GET'])

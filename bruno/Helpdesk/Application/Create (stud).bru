@@ -1,0 +1,23 @@
+meta {
+  name: Create (stud)
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{HELPDESK}}/application/stud
+  body: json
+  auth: none
+}
+
+headers {
+  Token: mfci32tstudent
+}
+
+body:json {
+  {
+    "category": "test",
+    "owner_tg": 2,
+    "status": "waiting"
+  }
+}
