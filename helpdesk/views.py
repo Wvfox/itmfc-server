@@ -168,7 +168,7 @@ def button_detail(request, pk: int):
 
 @api_view(['GET'])
 @parser_classes([JSONParser])
-@mfc_auth_token
+# @mfc_auth_token
 @error_handler_basic
 def button_type(request, type_filter: str):
     if request.method == 'GET':
