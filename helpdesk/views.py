@@ -2,7 +2,7 @@ from django.http import JsonResponse, HttpResponse
 from rest_framework.parsers import JSONParser
 from rest_framework.decorators import api_view, parser_classes
 
-from config.decorators import error_handler_basic, mfc_auth_token
+from config.decorators import error_handler_basic, mfc_auth_token, student_mfc_token
 from .serializers import *
 
 
@@ -164,6 +164,31 @@ def button_detail(request, pk: int):
     elif request.method == 'DELETE':
         button.delete()
         return HttpResponse(status=204)
+
+
+@api_view(['GET', 'PUT'])
+@parser_classes([JSONParser])
+@student_mfc_token
+@error_handler_basic
+def button_detail_stud(request, pk: int):
+    """
+    View(GET), update(PUT) button.
+    """
+    button = Button.objects.get(pk=pk)
+    data = request.data
+
+    if request.method == 'GET':
+        serializer = ButtonSerializer(button)
+        return JsonResponse(serializer.data)
+
+    elif request.method == 'PUT':
+        if not data.get('title'):
+            data['title'] = button.title
+        # === Serializer ===
+        serializer = ButtonSerializer(button, data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return JsonResponse(serializer.data, status=201)
 
 
 @api_view(['GET'])
