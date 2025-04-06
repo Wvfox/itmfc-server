@@ -1,7 +1,7 @@
 meta {
   name: Create (stud)
   type: http
-  seq: 5
+  seq: 6
 }
 
 post {
@@ -10,14 +10,11 @@ post {
   auth: none
 }
 
-headers {
-  Token: mfci32tstudent
-}
-
 body:json {
   {
+    "token": "mfci32tstudent",
     "category": "test",
     "owner_tg": 2,
-    "status": "waiting"
+    "status": "desktop"
   }
 }

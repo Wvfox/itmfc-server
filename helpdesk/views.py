@@ -1,3 +1,5 @@
+import os
+
 from django.http import JsonResponse, HttpResponse
 from rest_framework.parsers import JSONParser
 from rest_framework.decorators import api_view, parser_classes
@@ -43,15 +45,18 @@ def application_list(request):
 
 @api_view(['GET', 'POST'])
 @parser_classes([JSONParser])
-@student_mfc_token
 @error_handler_basic
 def application_create_stud(request):
     data = request.data
 
     if request.method == 'GET':
+        if not data.get('token') or data['token'] != os.environ.get("STUD_TOKEN"):
+            return JsonResponse({'Message': 'Failed authorization'}, status=403)
         return JsonResponse({'Message': 'Not found'}, status=404)
 
     if request.method == 'POST':
+        if not data.get('token') or data['token'] != os.environ.get("STUD_TOKEN"):
+            return JsonResponse({'Message': 'Failed authorization'}, status=403)
         serializer = ApplicationSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         if data.get('operator_username'):
