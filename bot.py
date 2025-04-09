@@ -12,7 +12,7 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO)
 
 # Данные для подключения
-api_id = int(os.environ.get("TG_BOT_API_ID"))
+api_id = os.environ.get("TG_BOT_API_ID")
 api_hash = os.environ.get("TG_BOT_API_HASH")
 bot_token = os.environ.get("TG_BOT_TOKEN")
 

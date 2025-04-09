@@ -78,19 +78,19 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    # },
     'default': {
-        'ENGINE': 'mysql.connector.django',
-        'NAME': os.environ.get("DATABASE_NAME"),
-        'HOST': os.environ.get("DATABASE_HOST"),
-        'PORT': os.environ.get("DATABASE_PORT"),
-        'USER': os.environ.get("DATABASE_USER"),
-        'PASSWORD': os.environ.get("DATABASE_PASSWORD"),
-        'OPTIONS': {'init_command': "SET sql_mode='STRICT_TRANS_TABLES'", "use_pure": True},
-    }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    },
+    # 'default': {
+    #     'ENGINE': 'mysql.connector.django',
+    #     'NAME': os.environ.get("DATABASE_NAME"),
+    #     'HOST': os.environ.get("DATABASE_HOST"),
+    #     'PORT': os.environ.get("DATABASE_PORT"),
+    #     'USER': os.environ.get("DATABASE_USER"),
+    #     'PASSWORD': os.environ.get("DATABASE_PASSWORD"),
+    #     'OPTIONS': {'init_command': "SET sql_mode='STRICT_TRANS_TABLES'", "use_pure": True},
+    # }
 }
 
 
@@ -163,16 +163,12 @@ EMAIL_ADMIN = EMAIL_HOST_USER
 # Bot tg
 try:
     from bot import main, client
-
-
     def start_tg_bot(loop):
         asyncio.set_event_loop(loop)
         loop.run_until_complete(main())
-
-
     loop_tg_bot = asyncio.new_event_loop()
     tg_bot = threading.Thread(target=start_tg_bot, args=(loop_tg_bot,), name='tgbot_pooling')
     tg_bot.start()
 except Exception as ex:
-    print('Ooops...')
+    print(ex)
 
