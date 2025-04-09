@@ -1,3 +1,4 @@
+import asyncio
 import os
 import threading
 from pathlib import Path
@@ -162,6 +163,13 @@ EMAIL_ADMIN = EMAIL_HOST_USER
 
 # Bot tg
 
-# tg_bot = threading.Thread(target=client.loop.run_until_complete(main()), name='tgbot_pooling')
-# tg_bot.start()
+
+def start_tg_bot(loop):
+    asyncio.set_event_loop(loop)
+    loop.run_until_complete(main())
+
+
+loop_tg_bot = asyncio.new_event_loop()
+tg_bot = threading.Thread(target=start_tg_bot, args=(loop_tg_bot,), name='tgbot_pooling')
+tg_bot.start()
 
