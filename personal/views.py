@@ -316,7 +316,6 @@ def workstation_printer(request, name: str, ip: str):
 
 @api_view(['GET', 'POST'])
 @parser_classes([JSONParser])
-@mfc_auth_token
 @error_handler_basic
 def guest_list(request):
     data = request.data
@@ -335,7 +334,6 @@ def guest_list(request):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 @parser_classes([JSONParser])
-@mfc_auth_token
 @error_handler_basic
 def guest_detail(request, user_id: int):
     guest = Guest.objects.get(user_id=user_id)
@@ -359,7 +357,6 @@ def guest_detail(request, user_id: int):
 
 @api_view(['PUT'])
 @parser_classes([JSONParser])
-@mfc_auth_token
 @error_handler_basic
 def guest_check(request, user_id: int):
     guest = Guest.objects.get(user_id=user_id)
@@ -369,3 +366,5 @@ def guest_check(request, user_id: int):
         guest.is_check = True
         guest.save()
         return JsonResponse({'Message': 'Complete'}, status=200)
+
+
