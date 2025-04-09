@@ -161,15 +161,18 @@ SERVER_EMAIL = EMAIL_HOST_USER
 EMAIL_ADMIN = EMAIL_HOST_USER
 
 # Bot tg
-from bot import main, client
+try:
+    from bot import main, client
 
 
-def start_tg_bot(loop):
-    asyncio.set_event_loop(loop)
-    loop.run_until_complete(main())
+    def start_tg_bot(loop):
+        asyncio.set_event_loop(loop)
+        loop.run_until_complete(main())
 
 
-loop_tg_bot = asyncio.new_event_loop()
-tg_bot = threading.Thread(target=start_tg_bot, args=(loop_tg_bot,), name='tgbot_pooling')
-tg_bot.start()
+    loop_tg_bot = asyncio.new_event_loop()
+    tg_bot = threading.Thread(target=start_tg_bot, args=(loop_tg_bot,), name='tgbot_pooling')
+    tg_bot.start()
+except Exception as ex:
+    print('Ooops...')
 
