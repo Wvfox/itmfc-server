@@ -90,8 +90,8 @@ async def notify_new_member(new_member_id, chat_id, action_type):
     # Обновляем JSON файл с информацией о пользователе
     user_data = {
         'first_name': user.first_name,
-        'last_name': user.last_name if user.last_name else None,
-        'user_tag': f'@{user.username}' if user.username else None,
+        'last_name': user.last_name if user.last_name else '',
+        'user_tag': f'@{user.username}' if user.username else '',
         'user_id': user.id,
         'group_id': chat_id
     }
