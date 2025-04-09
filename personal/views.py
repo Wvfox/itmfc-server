@@ -307,3 +307,65 @@ def workstation_printer(request, name: str, ip: str):
         workstation.printers.remove(Printer.objects.get(ip_printer=ip))
         workstation.save()
         return JsonResponse(WorkstationSerializer(workstation).data)
+
+
+'''---------------------------------------------------------------------
+========================== Workstation request =========================
+---------------------------------------------------------------------'''
+
+
+@api_view(['GET', 'POST'])
+@parser_classes([JSONParser])
+@mfc_auth_token
+@error_handler_basic
+def guest_list(request):
+    data = request.data
+
+    if request.method == 'GET':
+        guests = Guest.objects.all()
+        serializer = GuestSerializer(guests, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    elif request.method == 'POST':
+        serializer = GuestSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return JsonResponse(serializer.data, status=201)
+
+
+@api_view(['GET', 'PUT', 'DELETE'])
+@parser_classes([JSONParser])
+@mfc_auth_token
+@error_handler_basic
+def guest_detail(request, user_id: int):
+    guest = Guest.objects.get(user_id=user_id)
+    data = request.data
+
+    if request.method == 'GET':
+        serializer = GuestSerializer(guest)
+        return JsonResponse(serializer.data)
+
+    elif request.method == 'PUT':
+        # === Serializer ===
+        serializer = GuestSerializer(guest, data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return JsonResponse(serializer.data)
+
+    elif request.method == 'DELETE':
+        guest.delete()
+        return HttpResponse(status=204)
+
+
+@api_view(['PUT'])
+@parser_classes([JSONParser])
+@mfc_auth_token
+@error_handler_basic
+def guest_check(request, user_id: int):
+    guest = Guest.objects.get(user_id=user_id)
+    data = request.data
+
+    if request.method == 'PUT':
+        guest.is_check = True
+        guest.save()
+        return JsonResponse({'Message': 'Complete'}, status=200)

@@ -31,3 +31,11 @@ class WorkstationSerializer(serializers.ModelSerializer):
         model = Workstation
         fields = '__all__'
         read_only_fields = ('id', 'updated_at', 'created_at')
+
+
+class GuestSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Guest
+        fields = '__all__'
+        read_only_fields = ('id', 'updated_at', 'created_at')
