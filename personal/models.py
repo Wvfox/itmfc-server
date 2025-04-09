@@ -76,7 +76,8 @@ class Guest(models.Model):
     created_at = models.DateField('Date of creation', auto_now_add=True)
 
     class Meta:
-        ordering = ['created_at']
+        pass
+        # ordering = ['created_at']
 
     def __str__(self):
         return self.user_id
