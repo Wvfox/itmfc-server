@@ -3,7 +3,6 @@ import os
 import threading
 from pathlib import Path
 from dotenv import load_dotenv
-from bot import main, client
 
 load_dotenv()
 
@@ -162,6 +161,7 @@ SERVER_EMAIL = EMAIL_HOST_USER
 EMAIL_ADMIN = EMAIL_HOST_USER
 
 # Bot tg
+from bot import main, client
 
 
 def start_tg_bot(loop):

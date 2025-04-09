@@ -73,13 +73,12 @@ def update_json(data):
 # Функция для отправки информации о новом участнике
 async def notify_new_member(new_member_id, chat_id, action_type):
     user = await client.get_entity(new_member_id)
-    print()
     user_info = (
         f"🔹 Новый участник!\n\n"
         f"👤 Имя: {user.first_name}\n"
-        f"👤 Фамилия: {user.last_name if user.last_name else 'Нет'}\n"
+        f"👤 Фамилия: {user.last_name if user.last_name else '-'}\n"
         f"🆔 ID: {user.id}\n"
-        f"💾 Тэг: @{user.username if user.username else 'Нет'}"
+        f"💾 Тэг: {f'@{user.username}' if user.username else '-'}"
     )
     
     if action_type == "added":
@@ -91,8 +90,8 @@ async def notify_new_member(new_member_id, chat_id, action_type):
     # Обновляем JSON файл с информацией о пользователе
     user_data = {
         'first_name': user.first_name,
-        'last_name': user.last_name if user.last_name else 'Нет',
-        'user_tag': f'@{user.username}' if user.username else 'Нет',
+        'last_name': user.last_name if user.last_name else None,
+        'user_tag': f'@{user.username}' if user.username else None,
         'user_id': user.id,
         'group_id': chat_id
     }
