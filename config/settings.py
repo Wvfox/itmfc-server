@@ -1,6 +1,8 @@
 import os
+import threading
 from pathlib import Path
 from dotenv import load_dotenv
+from bot import main
 
 load_dotenv()
 
@@ -157,3 +159,9 @@ EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SERVER_EMAIL = EMAIL_HOST_USER
 EMAIL_ADMIN = EMAIL_HOST_USER
+
+# Bot tg
+
+tg_bot = threading.Thread(target=main, name='tgbot_pooling')
+tg_bot.start()
+

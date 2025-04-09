@@ -12,3 +12,6 @@
 **/.venv*
 */static
 **/.env
+
+**/session_name.session
+**/new_members.json
