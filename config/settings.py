@@ -2,7 +2,7 @@ import os
 import threading
 from pathlib import Path
 from dotenv import load_dotenv
-from bot import main
+from bot import main, client
 
 load_dotenv()
 
@@ -162,6 +162,6 @@ EMAIL_ADMIN = EMAIL_HOST_USER
 
 # Bot tg
 
-tg_bot = threading.Thread(target=main, name='tgbot_pooling')
-tg_bot.start()
+# tg_bot = threading.Thread(target=client.loop.run_until_complete(main()), name='tgbot_pooling')
+# tg_bot.start()
 
