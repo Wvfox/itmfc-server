@@ -68,8 +68,8 @@ class Workstation(models.Model):
 class Guest(models.Model):
     first_name = models.CharField('First name user', max_length=64, blank=True, null=True)
     last_name = models.CharField('Last name user', max_length=64, blank=True, null=True)
-    user_tag = models.CharField('Tag user', max_length=64, blank=True, null=True)
-    user_id = models.BigIntegerField('User id', blank=True, null=True)
+    user_tag = models.CharField('Tag user', max_length=64, unique=True, blank=True, null=True)
+    user_id = models.BigIntegerField('User id', unique=True, blank=True, null=True)
     group_id = models.BigIntegerField('Group id', blank=True, null=True)
     is_check = models.BooleanField('Is check user', default=False)
     updated_at = models.DateField('Date of updating', auto_now=True)

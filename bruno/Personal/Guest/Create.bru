@@ -1,0 +1,21 @@
+meta {
+  name: Create
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{PERSONAL}}/guest
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "first_name": "Максим",
+    "last_name": "Бывшев",
+    "user_tag": "@wvfox597",
+    "user_id": 5808204052,
+    "group_id": -1002063898953
+  }
+}
