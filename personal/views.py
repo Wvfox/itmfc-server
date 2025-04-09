@@ -335,8 +335,8 @@ def guest_list(request):
 @api_view(['GET', 'PUT', 'DELETE'])
 @parser_classes([JSONParser])
 @error_handler_basic
-def guest_detail(request, user_id: int):
-    guest = Guest.objects.get(user_id=user_id)
+def guest_detail(request, pk: int):
+    guest = Guest.objects.get(pk=pk)
     data = request.data
 
     if request.method == 'GET':
