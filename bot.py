@@ -90,8 +90,8 @@ async def notify_new_member(new_member_id, chat_id, action_type):
     # Обновляем JSON файл с информацией о пользователе
     user_data = {
         'first_name': user.first_name,
-        'last_name': user.last_name if user.last_name else '',
-        'user_tag': f'@{user.username}' if user.username else '',
+        'last_name': user.last_name if user.last_name else None,
+        'user_tag': f'@{user.username}' if user.username else None,
         'user_id': user.id,
         'group_id': chat_id
     }
@@ -151,9 +151,21 @@ async def get_group_id(group_name):
 
 # Запуск клиента
 async def main():
-    await client.start(bot_token=bot_token) 
+    await client.start(bot_token=bot_token)
     print("Бот запущен...")
     await client.run_until_disconnected()
 
 
 # client.loop.run_until_complete(main())
+import asyncio
+
+
+loop_tg_bot = asyncio.new_event_loop()
+asyncio.set_event_loop(loop_tg_bot)
+
+
+def worker_start():
+    try:
+        loop_tg_bot.run_until_complete(main())
+    except Exception as ex:
+        print(ex)
