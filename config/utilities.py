@@ -3,7 +3,6 @@ import os.path
 from os.path import splitext
 from uuid import uuid4
 
-import cv2
 from django.core.files.storage import FileSystemStorage
 from django.http import FileResponse, HttpResponse
 from rest_framework.decorators import api_view, parser_classes
@@ -11,8 +10,8 @@ from rest_framework.parsers import JSONParser
 
 from config.settings import MEDIA_ROOT, BASE_DIR
 
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from cryptography.hazmat.primitives import padding
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad,unpad
 
 
 class UUIDFileStorage(FileSystemStorage):
@@ -65,47 +64,13 @@ def get_src_file(request, media_url: str):
 '''--------------------------------------------------------------
 ========================= Cryptography ==========================
 --------------------------------------------------------------'''
-def encrypt_aes(source_str):
-    # === Handlers ===
-    cipher = Cipher(algorithms.AES(os.environ.get("AES_KEY").encode()), modes.CBC(("\x00" * 16).encode()))
-    encryptor = cipher.encryptor()
-    padder = padding.PKCS7(128).padder()
-    # === Encrypt ===
-    data = str.encode(source_str)
-    padded_data = padder.update(data) + padder.finalize()
-    ciphertext = encryptor.update(padded_data) + encryptor.finalize()
-    return base64.b64encode(ciphertext).decode("utf-8")
-
-def decrypt_aes(cipher_str):
-    # === Handlers ===
-    cipher = Cipher(algorithms.AES(os.environ.get("AES_KEY").encode()), modes.CBC(("\x00" * 16).encode()))
-    decryptor = cipher.decryptor()
-    unpadder = padding.PKCS7(128).unpadder()
-    # === Decrypt ===
-    cipher_str_bytes = str.encode(cipher_str)
-    data = base64.b64decode(cipher_str_bytes)
-    decrypted_data = decryptor.update(data) + decryptor.finalize()
-    unpadded_data = unpadder.update(decrypted_data) + unpadder.finalize()
-    return unpadded_data.decode("utf-8")
+def encrypt_aes(data_message):
+    data_message = pad(data_message.encode(), 16)
+    cipher = AES.new(os.environ.get("AES_KEY").encode('utf-8'), AES.MODE_CBC, os.environ.get("AES_IV").encode('utf-8'))
+    return base64.b64encode(cipher.encrypt(data_message)).decode("utf-8", "ignore")
 
 
-'''--------------------------------------------------------------
-========================= Pycryptodome ==========================
---------------------------------------------------------------'''
-# from Crypto.Cipher import AES
-# from Crypto.Util.Padding import unpad, pad
-
-# def encrypt_aes(source_str):
-#     # _iv = "\x00" * AES.block_size  # creates a 16 byte zero initialized string
-#     generator = AES.new(os.environ.get("AES_KEY").encode(), AES.MODE_CBC, ("\x00" * AES.block_size).encode())
-#     source_str_bytes = pad(source_str.encode(), AES.block_size)
-#     encrypted = generator.encrypt(source_str_bytes)
-#     return base64.b64encode(encrypted)
-#
-#
-# def decrypt_aes(cipher_str):
-#     # _iv = "\x00" * AES.block_size  # creates a 16 byte zero initialized string
-#     generator = AES.new(os.environ.get("AES_KEY").encode(), AES.MODE_CBC, ("\x00" * AES.block_size).encode())
-#     cipher_str_bytes = base64.b64decode(cipher_str)
-#     decrypted = generator.decrypt(cipher_str_bytes)
-#     return unpad(decrypted, AES.block_size).decode(encoding="utf-8")
+def decrypt_aes(data_encrypted):
+    data_encrypted = base64.b64decode(data_encrypted)
+    cipher = AES.new(os.environ.get("AES_KEY").encode('utf-8'), AES.MODE_CBC, os.environ.get("AES_IV").encode('utf-8'))
+    return unpad(cipher.decrypt(data_encrypted), 16).decode("utf-8", "ignore")
