@@ -8,6 +8,4 @@ urlpatterns = [
     re_path(r'^(?P<pk>\d+)$', task_detail),
     re_path(r'^(?P<pk>\d+)/processing$', task_processing),
     re_path(r'^(?P<pk>\d+)/complete$', task_complete),
-
-    re_path(r'^bot/start$', start_bot),
 ]

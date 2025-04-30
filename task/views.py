@@ -6,26 +6,7 @@ from django.http import HttpResponse, JsonResponse
 from rest_framework.decorators import api_view, parser_classes
 from rest_framework.parsers import JSONParser
 
-from bot import worker_start
 from task.serializers import *
-
-
-# Bot tg
-
-tg_bot = threading.Thread(target=worker_start, name='tgbot_pooling')
-
-
-@api_view(['GET'])
-def start_bot(request):
-    try:
-        tg_bot.join()
-        return HttpResponse(status=200)
-    except RuntimeError:
-        tg_bot.start()
-        return HttpResponse(status=201)
-    except Exception as ex:
-        print(ex)
-        return HttpResponse(status=400)
 
 
 @api_view(['GET'])
