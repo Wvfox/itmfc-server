@@ -167,31 +167,6 @@ def clip_delete(request, pk: int):
         return HttpResponse(status=204)
 
 
-@api_view(['POST'])
-@parser_classes([MultiPartParser])
-@error_handler_basic
-def clip_upload_s3(request):
-    data = request.data
-
-    if request.method == 'POST':
-        # key = decrypt_aes(data['cypher'])
-        # if key != os.environ.get("UPLOAD_TOKEN"):
-        #     return JsonResponse({'Message': 'Failed authorization'}, status=403)
-        serializer = ClipSerializer(data=data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        local_path = serializer.data['media']
-        full_path = f'{BASE_DIR}{local_path}'
-        s3_client.upload_file(
-            full_path,
-            'ca061599-n1app',
-            local_path[1::]
-        )
-        if os.path.exists(full_path):
-            os.remove(full_path)
-        return JsonResponse({'message': 'success'}, status=201)
-
-
 @api_view(['GET'])
 @parser_classes([JSONParser])
 @error_handler_basic
