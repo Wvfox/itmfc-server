@@ -1,8 +1,8 @@
 import datetime
 import os.path
 import requests
-import boto3
-from botocore.config import Config
+# import boto3
+# from botocore.config import Config
 
 from django.http import JsonResponse, HttpResponse
 from rest_framework.decorators import api_view, parser_classes
@@ -62,17 +62,17 @@ def clip_list(request):
         serializer.save()
         local_path = serializer.data['media']
         full_path = f'{BASE_DIR}{local_path}'
-        boto3.client(
-            's3',
-            aws_access_key_id=os.environ.get("S3_ACCESS_KEY"),
-            aws_secret_access_key=os.environ.get("S3_SECRET_KEY"),
-            endpoint_url=os.environ.get("S3_ENDPOINT_URL"),
-            config=Config(signature_version='s3')
-        ).upload_file(
-            full_path,
-            'ca061599-n1app',
-            local_path[1::]
-        )
+        # boto3.client(
+        #     's3',
+        #     aws_access_key_id=os.environ.get("S3_ACCESS_KEY"),
+        #     aws_secret_access_key=os.environ.get("S3_SECRET_KEY"),
+        #     endpoint_url=os.environ.get("S3_ENDPOINT_URL"),
+        #     config=Config(signature_version='s3')
+        # ).upload_file(
+        #     full_path,
+        #     'ca061599-n1app',
+        #     local_path[1::]
+        # )
         # get video
         clip = Clip.objects.get(id=serializer.data['id'])
         # write duration video
