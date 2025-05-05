@@ -2,7 +2,8 @@ import datetime
 import os.path
 import requests
 from config.cloud_client_s3 import cloud_client
-from config.cypher import decrypt_aes
+import boto3
+from botocore.config import Config
 
 from django.http import JsonResponse, HttpResponse
 from rest_framework.decorators import api_view, parser_classes
@@ -10,7 +11,7 @@ from rest_framework.parsers import MultiPartParser, JSONParser
 
 from config.decorators import error_handler_basic, mfc_auth_token
 from config.settings import MEDIA_ROOT, BASE_DIR
-from config.utilities import clear_dir_media, get_video_duration
+from config.utilities import clear_dir_media, get_video_duration, decrypt_aes
 from .serializers import *
 
 
@@ -62,7 +63,13 @@ def clip_list(request):
         serializer.save()
         local_path = serializer.data['media']
         full_path = f'{BASE_DIR}{local_path}'
-        cloud_client.upload_file(
+        boto3.client(
+            's3',
+            aws_access_key_id=os.environ.get("S3_ACCESS_KEY"),
+            aws_secret_access_key=os.environ.get("S3_SECRET_KEY"),
+            endpoint_url=os.environ.get("S3_ENDPOINT_URL"),
+            config=Config(signature_version='s3')
+        ).upload_file(
             full_path,
             'ca061599-n1app',
             local_path[1::]
