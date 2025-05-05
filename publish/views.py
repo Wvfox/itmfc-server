@@ -1,8 +1,9 @@
 import datetime
 import os.path
 import requests
+from config.cloud_client_s3 import cloud_client
 from config.cypher import decrypt_aes
-from config.s3 import s3_client
+
 from django.http import JsonResponse, HttpResponse
 from rest_framework.decorators import api_view, parser_classes
 from rest_framework.parsers import MultiPartParser, JSONParser
@@ -61,7 +62,7 @@ def clip_list(request):
         serializer.save()
         local_path = serializer.data['media']
         full_path = f'{BASE_DIR}{local_path}'
-        s3_client.upload_file(
+        cloud_client.upload_file(
             full_path,
             'ca061599-n1app',
             local_path[1::]
