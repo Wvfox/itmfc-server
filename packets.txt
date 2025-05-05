@@ -4,7 +4,8 @@ djangorestframework
 pycryptodome
 mysql-connector-python
 gunicorn
-opencv-python
 python-dotenv
 django-cors-headers
 opencv-contrib-python
+
+opencv-python
