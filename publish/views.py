@@ -1,7 +1,6 @@
 import datetime
 import os.path
 import requests
-from config.cloud_client_s3 import cloud_client
 import boto3
 from botocore.config import Config
 
