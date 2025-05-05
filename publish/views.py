@@ -1,17 +1,41 @@
 import datetime
 import os.path
-
+import requests
+from config.cypher import decrypt_aes
+from config.s3 import s3_client
 from django.http import JsonResponse, HttpResponse
 from rest_framework.decorators import api_view, parser_classes
 from rest_framework.parsers import MultiPartParser, JSONParser
 
 from config.decorators import error_handler_basic, mfc_auth_token
-from config.settings import MEDIA_ROOT
-from config.utilities import get_video_duration, clear_dir_media, encrypt_aes, decrypt_aes
+from config.settings import MEDIA_ROOT, BASE_DIR
+from config.utilities import clear_dir_media, get_video_duration
 from .serializers import *
 
 
 LOCATION_LIST = ['voskresensk', 'beloozerskiy']
+
+
+@api_view(['GET'])
+@parser_classes([JSONParser])
+def init_media_s3(request):
+    for clip in Clip.objects.all().filter(is_wrong=False):
+        file_name = clip.media.url.split('/')[-1]
+        dir_list = clip.media.url[1::].split('/')[:-1]
+
+        layer_first = dir_list[0]
+        if not os.path.exists(layer_first):
+            os.makedirs(layer_first)
+        layer_second = dir_list[0] + '\\' + dir_list[1]
+        if not os.path.exists(layer_second):
+            os.makedirs(layer_second)
+        layer_third = dir_list[0] + '\\' + dir_list[1] + '\\' + dir_list[2]
+        if not os.path.exists(layer_third):
+            os.makedirs(layer_third)
+
+        with open(clip.media.url[1::], 'wb') as file:
+            file.write(requests.get('https://s3.twcstorage.ru/ca061599-n1app' + clip.media.url).content)
+    return HttpResponse()
 
 
 @api_view(['GET', 'POST'])
@@ -35,10 +59,18 @@ def clip_list(request):
         serializer = ClipSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        local_path = serializer.data['media']
+        full_path = f'{BASE_DIR}{local_path}'
+        s3_client.upload_file(
+            full_path,
+            'ca061599-n1app',
+            local_path[1::]
+        )
         # get video
         clip = Clip.objects.get(id=serializer.data['id'])
         # write duration video
         clip.duration = get_video_duration(str(MEDIA_ROOT) + str(clip.media)) + 2
+
         for loc in LOCATION_LIST:
             clip.locations.create(name=loc)
         clip.save()
@@ -128,6 +160,31 @@ def clip_delete(request, pk: int):
         return HttpResponse(status=204)
 
 
+@api_view(['POST'])
+@parser_classes([MultiPartParser])
+@error_handler_basic
+def clip_upload_s3(request):
+    data = request.data
+
+    if request.method == 'POST':
+        # key = decrypt_aes(data['cypher'])
+        # if key != os.environ.get("UPLOAD_TOKEN"):
+        #     return JsonResponse({'Message': 'Failed authorization'}, status=403)
+        serializer = ClipSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        local_path = serializer.data['media']
+        full_path = f'{BASE_DIR}{local_path}'
+        s3_client.upload_file(
+            full_path,
+            'ca061599-n1app',
+            local_path[1::]
+        )
+        if os.path.exists(full_path):
+            os.remove(full_path)
+        return JsonResponse({'message': 'success'}, status=201)
+
+
 @api_view(['GET'])
 @parser_classes([JSONParser])
 @error_handler_basic
@@ -167,15 +224,16 @@ def clip_check(request, pk: int):
 
 @api_view(['PUT'])
 @parser_classes([JSONParser])
-@mfc_auth_token
+# @mfc_auth_token
 @error_handler_basic
 def clip_wrong_check(request, pk: int):
     if request.method == 'PUT':
-        clip = Clip.objects.get(pk=pk)
-        clip.is_wrong = True
-        clip.save()
-        serializer = ClipSerializer(clip)
-        return JsonResponse(serializer.data, safe=False)
+        # clip = Clip.objects.get(pk=pk)
+        # clip.is_wrong = True
+        # clip.save()
+        # serializer = ClipSerializer(clip)
+        # return JsonResponse(serializer.data, safe=False)
+        return HttpResponse()
 
 
 @api_view(['GET'])

@@ -4,6 +4,7 @@ from .views import *
 
 urlpatterns = [
     re_path(r'^$', clip_list),
+    re_path(r'^s3$', init_media_s3),
     re_path(r'^shuffle$', clip_list_shuffle),
     re_path(r'^clip/(?P<pk>\d+)$', clip_detail),
     re_path(r'^clip/delete/(?P<pk>\d+)$', clip_delete),

@@ -1,12 +1,12 @@
 import datetime
 import os
 
+from config.cypher import decrypt_aes
 from django.http import HttpResponse, JsonResponse
 from rest_framework.parsers import JSONParser
 from rest_framework.decorators import api_view, parser_classes
 
 from config.decorators import error_handler_basic, mfc_auth_token
-from config.utilities import decrypt_aes
 from .serializers import *
 
 
