@@ -7,3 +7,4 @@ gunicorn
 opencv-python
 python-dotenv
 django-cors-headers
+opencv-contrib-python
