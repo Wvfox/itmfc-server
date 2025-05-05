@@ -1,6 +1,7 @@
 import datetime
 import os.path
 import requests
+from config.cypher import decrypt_aes
 # import boto3
 # from botocore.config import Config
 
@@ -10,7 +11,7 @@ from rest_framework.parsers import MultiPartParser, JSONParser
 
 from config.decorators import error_handler_basic, mfc_auth_token
 from config.settings import MEDIA_ROOT, BASE_DIR
-from config.utilities import clear_dir_media, get_video_duration, decrypt_aes
+from config.utilities import clear_dir_media, get_video_duration
 from .serializers import *
 
 

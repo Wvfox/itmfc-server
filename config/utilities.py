@@ -1,10 +1,8 @@
-import base64
+
 import os.path
 from os.path import splitext
 from uuid import uuid4
 import cv2
-from Crypto.Cipher import AES
-from Crypto.Util.Padding import pad,unpad
 from config.decorators import error_handler_basic
 
 from django.core.files.storage import FileSystemStorage
@@ -63,17 +61,4 @@ def get_src_file(request, media_url: str):
     return FileResponse(src)
 
 
-key = os.environ.get("AES_KEY").encode('utf-8')
-iv = os.environ.get("AES_IV").encode('utf-8')
 
-
-def encrypt_aes(data_message):
-    data_message = pad(data_message.encode(), 16)
-    cipher = AES.new(key, AES.MODE_CBC, iv)
-    return base64.b64encode(cipher.encrypt(data_message)).decode("utf-8", "ignore")
-
-
-def decrypt_aes(data_encrypted):
-    data_encrypted = base64.b64decode(data_encrypted)
-    cipher = AES.new(key, AES.MODE_CBC, iv)
-    return unpad(cipher.decrypt(data_encrypted), 16).decode("utf-8", "ignore")
